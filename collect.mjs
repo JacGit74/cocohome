@@ -1,6 +1,6 @@
 // Runs with Node.js 22. No AI services, SDKs or keys are used.
 import { mkdir, writeFile, rename, rm } from 'node:fs/promises';
-const categories = ['SpecialPriceOffers', 'whatsnew'];
+const categories = ['SpecialPriceOffers', 'whatsnew', 'FY27_P2W2_MemberAppreciation'];
 const checkedAt = new Date().toISOString();
 async function getPage(category, page) {
   const url = new URL('https://www.costco.co.kr/api/v2/sites/korea/search');
@@ -26,6 +26,7 @@ async function collect(category) {
     if (page === 0) {
       total = pagination.totalResults;
       pages = pagination.totalPages;
+      if (total === 0 && category.startsWith('FY')) return { checkedAt, total: 0, products: [] };
       if (total < 1 || pages < 1 || pages > 200) throw new Error('Empty or implausible source listing; retain previous data');
     }
     if (pagination.totalResults !== total || pagination.totalPages !== pages) throw new Error('Source changed during collection; retain previous data');
