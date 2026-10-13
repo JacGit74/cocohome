@@ -6,6 +6,7 @@ on:
   push:
     paths:
       - collect.mjs
+      - collect.test.mjs
       - normalize.mjs
       - .github/workflows/daily-refresh.yml
 permissions:
@@ -22,6 +23,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: node --test collect.test.mjs
       - run: node collect.mjs
       - run: node normalize.mjs
       - name: Save validated snapshot
